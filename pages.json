@@ -1,0 +1,69 @@
+{
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "首页"
+      }
+    },
+    {
+      "path": "pages/my/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/picker/index",
+      "style": {
+        "navigationBarTitleText": "picker"
+      }
+    },
+    {
+      "path": "pages/tabs/index",
+      "style": {
+        "navigationBarTitleText": "选项卡"
+      }
+    },
+    {
+      "path": "pages/popup/index",
+      "style": {
+        "navigationBarTitleText": "弹框"
+      }
+    },
+    {
+      "path": "pages/pull-scroll/index",
+      "style": {
+        "navigationBarTitleText": "下拉刷新，上拉加载"
+      }
+    }
+  ],
+  "globalStyle": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "s-ui-demo",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#efefef"
+  },
+  "tabBar": {
+    "color": "#999",
+    "backgroundColor": "#fafafa",
+    "selectedColor": "#406BDC",
+    "borderStyle": "white",
+    "list": [
+      {
+        "text": "首页",
+        "pagePath": "pages/home/index",
+        "iconPath": "static/tabbar/home.png",
+        "selectedIconPath": "static/tabbar/home-active.png"
+      },
+      {
+        "text": "我的",
+        "pagePath": "pages/my/index",
+        "iconPath": "static/tabbar/my.png",
+        "selectedIconPath": "static/tabbar/my-active.png"
+      }
+    ],
+    "position": "bottom"
+  },
+  "usingComponents": {}
+}
