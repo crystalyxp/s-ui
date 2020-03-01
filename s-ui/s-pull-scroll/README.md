@@ -1,3 +1,6 @@
+# 提示
+后续将不在插件市场更新，组件包和示例请访问github中[s-ui地址](https://github.com/sldt/s-ui)下载
+
 # s-pull-scroll
 
 ## 参数说明
@@ -28,6 +31,11 @@
       return 0;
     }
   },
+  // 是否阻止默认滚动
+  preventTouchmove: {
+    type: Boolean,
+    default: true
+  },
   // 提示文案
   loadingText: {
     type: String,
@@ -56,6 +64,11 @@
   // 下拉配置
   // 下拉回掉，参数为vm
   pullDown: Function,
+  // 是否允许下拉刷新
+  enablePullDown: {
+    type: Boolean,
+    default: true
+  },
   downOffset: {
     type: Number,
     default: 100
@@ -87,6 +100,11 @@
   // 上拉配置
   // 上拉回掉，参数为vm
   pullUp: Function,
+  // 是否允许上拉加载
+  enablePullUp: {
+    type: Boolean,
+    default: true
+  },
   upOffset: {
     type: Number,
     default: 160
