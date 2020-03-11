@@ -17,9 +17,23 @@
     type: Boolean,
     default: true
   },
+  // 自定义头部时，头部高度(px)
+  headerHeight: {
+    type: [Number, String],
+    default () {
+      return 0;
+    }
+  },
   // 距顶部(rpx)
   top: {
     type: [Number, Array, String],
+    default () {
+      return 0;
+    }
+  },
+  // 自定义底部时，底部高度(px)
+  footerHeight: {
+    type: [Number, String],
     default () {
       return 0;
     }
@@ -36,30 +50,75 @@
     type: Boolean,
     default: true
   },
-  // 提示文案
-  loadingText: {
-    type: String,
-    default: '加载中 ...'
-  },
+  // 下拉时文案
   pullingText: {
     type: String,
     default: '下拉刷新'
   },
+  // 下拉释放时文案
   loosingText: {
     type: String,
     default: '释放刷新'
   },
-  finishText: {
+  // 下拉释放后文案
+  downLoadingText: {
     type: String,
-    default: '暂无更多了'
+    default: '正在刷新 ...'
   },
+  // 上拉加载时文案
+  upLoadingText: {
+    type: String,
+    default: '加载中 ...'
+  },
+  // 是否显示空布局
+  showEmpty: {
+    type: Boolean,
+    default: true
+  },
+  // 刷新或加载数据为空时文案
   emptyText: {
     type: String,
     default: '暂无数据'
   },
-  errorText: {
+  // 是否显示下拉刷新成功
+  showDownSuccess: {
+    type: Boolean,
+    default: false
+  },
+  // 下拉刷新成功文案
+  downSuccessText: {
+    type: String,
+    default: '刷新成功'
+  },
+  // 是否显示下拉刷新失败
+  showDownError: {
+    type: Boolean,
+    default: false
+  },
+  // 下拉刷新失败文案
+  downErrorText: {
+    type: String,
+    default: '刷新失败'
+  },
+  // 是否显示上拉加载时失败
+  showUpError: {
+    type: Boolean,
+    default: true
+  },
+  // 上拉加载失败文案
+  upErrorText: {
     type: String,
     default: '加载失败，点击重新加载'
+  },
+  // 是否显示上拉加载数据全部完成
+  showUpFinish: {
+    type: Boolean,
+    default: true
+  },
+  // 上拉加载完毕文案
+  upFinishText: {
+    type: String,
+    default: '暂无更多了'
   },
   // 下拉配置
   // 下拉回掉，参数为vm
@@ -111,6 +170,7 @@
   },
   // 回到顶部
   backTop: Boolean,
+  // 滚动距离大于多少rpx时触发
   backTopOffset: {
     type: Number,
     default: 1000
@@ -133,7 +193,7 @@ pullScroll.error(); // 表示加载失败，显示失败布局，page会减1
 
 pullScroll.empty(); // 表示暂无数据
 
-pullScroll.finish(isShowFinishText:boolean); // 表示全部加载完毕,参数是否显示finishText,默认显示
+pullScroll.finish(); // 表示全部加载完毕
 
 // 初始化刷新，page从1开始
 pullScroll.refresh(); // 如有pullDown，则自动触发下拉刷新，如有pullUp，则自动触发pullUp，page从1开始
@@ -188,8 +248,7 @@ export default {
         }
         this.list = this.list.concat(curList);
         if (this.list.length > 60) {
-          // finish(boolean:是否显示finishText,默认显示)
-          pullScroll.finish(this.list.length > 5);
+          pullScroll.finish();
         } else {
           pullScroll.success();
         }

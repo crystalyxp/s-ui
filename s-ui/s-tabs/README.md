@@ -3,7 +3,7 @@
 
 # s-tabs
 
-## 参数说明
+## s-tabs组件参数说明
 
 ``` js
 {
@@ -67,14 +67,30 @@
   }
 }
 ```
+## s-tab子组件参数说明
+
+``` js
+{
+  // 导航标题,内部v-html放置，支持html写法
+  title: {
+    type: String,
+    default: ''
+  },
+  // 是否禁用导航
+  disabled: {
+    type: Boolean,
+    default: false
+  }
+}
+```
 
 ## 使用方式
 
 #### template
 ``` html
-<s-tabs v-model="activeTab" @change="change" :nav-per-view="5">
-  <s-tab title="Tab1">1</s-tab>
-  <s-tab title="Tab2">2</s-tab>
+<s-tabs :effect="true" v-model="activeTab" @change="change" :nav-per-view="5">
+  <s-tab title="<span>1</span>">1</s-tab>
+  <s-tab title="Tab2" :disabled="true">2</s-tab>
   <s-tab title="Tab3">3</s-tab>
   <s-tab title="Tab4">4</s-tab>
   <s-tab title="Tab5">5</s-tab>

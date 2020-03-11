@@ -11,27 +11,44 @@ export default {
   name: 's-tab',
   inject: ['$tabs'],
   props: {
+    // 导航标题
     title: {
       type: String,
       default: ''
-    }
-  },
-  computed: {
-    isActive () {
-      return this.$tabs.navList[this.$tabs.value].id === this.id;
+    },
+    // 是否禁用导航
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      id: 's-tab-id-' + Math.random().toString(36).substr(2)
+      info: {
+        id: 's-tab-id-' + Math.random().toString(36).substr(2),
+        title: this.title,
+        isDisabled: this.disabled
+      }
     };
   },
+  computed: {
+    isActive () {
+      return this.$tabs.navList[this.$tabs.value].id === this.info.id;
+    }
+  },
+  watch: {
+    title () {
+      this.info.title = this.title;
+    },
+    disabled () {
+      this.info.isDisabled = this.disabled;
+    }
+  },
   created () {
-    const { id, title } = this;
-    this.$tabs.navList = this.$tabs.navList.concat({ id, title });
+    this.$tabs.navList = this.$tabs.navList.concat(this.info);
   },
   beforeDestroy () {
-    this.$tabs.navList = this.$tabs.navList.filter(item => item.id !== this.id);
+    this.$tabs.navList = this.$tabs.navList.filter(item => item.id !== this.info.id);
   }
 };
 </script>

@@ -1,8 +1,8 @@
 <template>
-  <section class="Index-Page">
+  <section class="Tabs-Page">
     <s-tabs :effect="true" v-model="activeTab" @change="change" :nav-per-view="5">
       <s-tab title="<span>1</span>">1</s-tab>
-      <s-tab title="Tab2">2</s-tab>
+      <s-tab title="Tab2" :disabled="true">2</s-tab>
       <s-tab title="Tab3">3</s-tab>
       <s-tab title="Tab4">4</s-tab>
       <s-tab title="Tab5">5</s-tab>
@@ -29,12 +29,14 @@ export default {
     change (index) {
       console.log(index);
     }
+  },
+  onLoad () {
   }
 };
 </script>
 
 <style lang="scss">
-.Index-Page {
+.Tabs-Page {
   /deep/.s-tab-wrap {
     .s-tab-panel {
       padding: 40rpx;

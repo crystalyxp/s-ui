@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     selectedText () {
-      return this.list[0][this.selectedIndex];
+      return this.list[0][this.selectedIndex[0]];
     }
   },
   data () {

@@ -16,20 +16,17 @@
       <span class="title">{{title}}</span>
       <div class="confirm-btn" :style="{color:confirmColor}" @click="confirm">{{confirmText}}</div>
     </div>
-    <picker-view
-      v-if="showContent"
-      class="s-picker-content"
-      :value="selectedValue"
-      @change="change"
-    >
-      <picker-view-column v-for="(listItem,listIndex) of list" :key="listIndex">
-        <view
-          class="s-picker-item"
-          v-for="(item,index) of listItem"
-          :key="index"
-        >{{formatText(item)}}</view>
-      </picker-view-column>
-    </picker-view>
+    <div class="s-picker-content">
+      <picker-view v-if="showContent" :value="selectedValue" @change="change">
+        <picker-view-column v-for="(listItem,listIndex) of list" :key="listIndex">
+          <view
+            class="s-picker-item"
+            v-for="(item,index) of listItem"
+            :key="index"
+          >{{formatText(item)}}</view>
+        </picker-view-column>
+      </picker-view>
+    </div>
   </s-popup>
 </template>
 
@@ -186,6 +183,9 @@ export default {
   }
   &-content {
     height: 400rpx;
+    picker-view {
+      height: 100%;
+    }
   }
   &-item {
     display: flex;

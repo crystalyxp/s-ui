@@ -1,6 +1,12 @@
 <template>
   <section class="PullScroll-Page">
-    <s-pull-scroll ref="pullScroll" :back-top="true" :pullDown="pullDown" :pullUp="loadData">
+    <s-pull-scroll
+      ref="pullScroll"
+      :show-down-success="true"
+      :back-top="true"
+      :pullDown="pullDown"
+      :pullUp="loadData"
+    >
       <ul>
         <li
           v-for="(item,index) of list"
@@ -45,8 +51,7 @@ export default {
         }
         this.list = this.list.concat(curList);
         if (this.list.length > 60) {
-          // finish(boolean:是否显示finishText,默认显示)
-          pullScroll.finish(this.list.length > 5);
+          pullScroll.finish();
         } else {
           pullScroll.success();
         }

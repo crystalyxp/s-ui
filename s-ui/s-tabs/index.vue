@@ -6,17 +6,18 @@
         :show-scrollbar="false"
         scroll-with-animation
         scroll-x
+        @scroll="onScroll"
         :scroll-left="scrollLeft"
       >
         <div
-          :class="['s-tab-nav',{'is-active':value==index}]"
+          v-for="(item,index) of navList"
+          :class="['s-tab-nav',{'is-disabled':item.isDisabled},{'is-active':value==index}]"
           :style="{
             width:navWidth,
             color:value==index?activeColor:color
           }"
-          v-for="(item,index) of navList"
           :key="index"
-          @click="navClick(index)"
+          @click="navClick(index,item)"
           v-html="item.title"
         ></div>
         <div
@@ -102,6 +103,7 @@ export default {
   },
   data () {
     return {
+      saveScrollLeft: 0,
       scrollLeft: 0,
       lineWidth: 0,
       lineLeft: 0,
@@ -132,8 +134,8 @@ export default {
     }
   },
   methods: {
-    navClick (index) {
-      if (index !== this.value) {
+    navClick (index, item) {
+      if (index !== this.value && !item.isDisabled) {
         this.$emit('input', index);
       }
     },
@@ -143,24 +145,20 @@ export default {
         const query = () => uni.createSelectorQuery().in(this);
         query().select('.s-tabs-nav-wrap').boundingClientRect().exec(([viewElem]) => {
           const viewWidth = viewElem.width;
-          let offsetLeft = 0;
-          let contentWdith = 0;
-          let curNavWidth = 0;
           query().selectAll('.s-tab-nav').boundingClientRect().exec(([list]) => {
-            list.forEach((item, index) => {
-              if (index <= this.value) {
-                curNavWidth = item.width;
-                offsetLeft += item.width;
-              }
-              contentWdith += item.width;
-            });
-            offsetLeft -= curNavWidth;
-            this.scrollLeft = Math.min(Math.max(contentWdith - viewWidth, 0), Math.max(0, offsetLeft - (viewWidth - curNavWidth) / 2));
-            this.lineWidth = curNavWidth * this.lineScale;
-            this.lineLeft = offsetLeft + (curNavWidth - this.lineWidth) / 2;
+            const item = list[this.value];
+            if (item) {
+              const itemCenterLeft = (viewWidth - item.width) / 2;
+              this.scrollLeft = this.saveScrollLeft + (item.left - itemCenterLeft);
+              this.lineWidth = item.width * this.lineScale;
+              this.lineLeft = this.scrollLeft + itemCenterLeft + (item.width - this.lineWidth) / 2;
+            }
           });
         });
       });
+    },
+    onScroll (e) {
+      this.saveScrollLeft = e.detail.scrollLeft;
     }
   },
   mounted () {
@@ -207,6 +205,10 @@ export default {
     text-overflow: ellipsis;
     box-sizing: border-box;
     cursor: pointer;
+    &.is-disabled {
+      color: #c8c9cc !important;
+      cursor: not-allowed;
+    }
   }
   .s-tab-line {
     position: absolute;
