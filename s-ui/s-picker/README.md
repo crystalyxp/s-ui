@@ -95,9 +95,23 @@
 <div
   class="btn btn-primary btn-block"
   style="height:80rpx;font-size:30rpx"
-  @click="showPicker=true"
->选择：{{selectedText}}</div>
-<s-picker :visible.sync="showPicker" :list="list" v-model="selectedIndex"><s-picker>
+  @click="showOnePicker=true"
+>一级：{{oneSelectedText}}</div>
+
+<s-picker :visible.sync="showOnePicker" :list="onePickerList" v-model="oneSelected"></s-picker>
+
+<div
+  class="btn btn-primary btn-block"
+  style="height:80rpx;font-size:30rpx;margin-top:40rpx"
+  @click="showTwoPicker=true"
+>二级联动：{{twoSelectedText}}</div>
+
+<s-picker
+  :visible.sync="showTwoPicker"
+  :list="twoPickerList"
+  @change="twoChange"
+  v-model="twoSelected"
+></s-picker>
 ```
 
 #### script
@@ -109,16 +123,49 @@ export default {
     sPicker
   },
   computed: {
-    selectedText () {
-      return this.list[0][this.selectedIndex];
+    oneSelectedText () {
+      return this.listData[this.oneSelected[0]].text;
+    },
+    twoSelectedText () {
+      return this.listData[this.twoSelected[0]].text + '-' + this.listData[this.twoSelected[0]].child[this.twoSelected[1]];
     }
   },
   data () {
     return {
-      showPicker: false,
-      list: [['中国', '美国', '伊朗', '日本']],
-      selectedIndex: [0]
+      listData: [
+        {
+          text: '山西',
+          child: ['太原', '运城', '临汾', '吕梁']
+        },
+        {
+          text: '河北',
+          child: ['石家庄', '邯郸']
+        },
+        {
+          text: '陕西',
+          child: ['西安']
+        }
+      ],
+      // 一级
+      onePickerList: [],
+      showOnePicker: false,
+      oneSelected: [0],
+      // 二级
+      twoPickerList: [],
+      showTwoPicker: false,
+      twoSelected: [0, 0]
     };
+  },
+  methods: {
+    twoChange (i, indexList) {
+      if (i == 0) {
+        this.twoPickerList = [this.listData, this.listData[indexList[0]].child];
+      }
+    }
+  },
+  onLoad () {
+    this.onePickerList = [this.listData];
+    this.twoPickerList = [this.listData, this.listData[0].child];
   }
 };
 ```

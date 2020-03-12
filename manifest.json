@@ -78,6 +78,6 @@
         "router" : {
             "mode" : "hash"
         },
-        "domain" : "./"
+        "domain" : "https://sldt.github.io/s-ui/"
     }
 }

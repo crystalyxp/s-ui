@@ -17,7 +17,7 @@
       <div class="confirm-btn" :style="{color:confirmColor}" @click="confirm">{{confirmText}}</div>
     </div>
     <div class="s-picker-content">
-      <picker-view v-if="showContent" :value="selectedValue" @change="change">
+      <picker-view v-if="showContent" :value="selectedIndexList" @change="slideChage">
         <picker-view-column v-for="(listItem,listIndex) of list" :key="listIndex">
           <view
             class="s-picker-item"
@@ -118,19 +118,19 @@ export default {
   },
   data () {
     return {
-      selectedValue: [],
+      selectedIndexList: [],
       showContent: false
     };
   },
   watch: {
     value () {
-      this.selectedValue = this.value;
+      this.setIndex(this.value);
     }
   },
   methods: {
     beforeShow () {
       setTimeout(() => {
-        this.selectedValue = this.value;
+        this.setIndex(this.value);
         this.showContent = true;
       }, 50);
     },
@@ -144,12 +144,21 @@ export default {
     formatText (item) {
       return (typeof item === 'object' && item) ? item[this.textKey] : item;
     },
-    change (e) {
-      this.selectedValue = e.detail.value;
-      this.$emit('change', this.selectedValue);
+    slideChage (e) {
+      this.setIndex(e.detail.value);
+    },
+    setIndex (indexList) {
+      const prevSelectedIndexList = this.selectedIndexList.slice(0);
+      this.selectedIndexList = indexList;
+      this.selectedIndexList.some((selectedIndex, i) => {
+        if (selectedIndex != prevSelectedIndexList[i]) {
+          this.$emit('change', i, this.selectedIndexList);
+          return true;
+        }
+      });
     },
     confirm () {
-      this.$emit('input', this.selectedValue);
+      this.$emit('input', this.selectedIndexList);
       this.hide();
     }
   }

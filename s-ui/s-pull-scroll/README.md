@@ -211,6 +211,11 @@ pullScroll.refresh(); // 如有pullDown，则自动触发下拉刷新，如有pu
       style="font-size:30rpx;padding:40rpx;text-align:center;border-bottom:1px solid #aaa"
     >{{item}}</li>
   </ul>
+
+  <!-- 使用插槽自定义空白布局 -->
+  <div slot="empty">
+    ...
+  </div>
 </s-pull-scroll>
 ```
 
