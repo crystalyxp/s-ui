@@ -56,10 +56,12 @@ export default {
 <style lang="scss">
 .s-tab-wrap {
   width: 100%;
-  flex-shrink: 0;
-  box-sizing: border-box;
   height: 0;
+  font-size: 28rpx;
+  flex-shrink: 0;
+  white-space: normal;
   overflow: hidden;
+  box-sizing: border-box;
   &.is-active {
     height: auto;
     overflow: visible;

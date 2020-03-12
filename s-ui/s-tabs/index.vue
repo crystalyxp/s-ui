@@ -6,20 +6,21 @@
         :show-scrollbar="false"
         scroll-with-animation
         scroll-x
-        @scroll="onScroll"
         :scroll-left="scrollLeft"
       >
-        <div
-          v-for="(item,index) of navList"
-          :class="['s-tab-nav',{'is-disabled':item.isDisabled},{'is-active':value==index}]"
-          :style="{
+        <ul class="s-tab-nav-view">
+          <li
+            v-for="(item,index) of navList"
+            :class="['s-tab-nav',{'is-disabled':item.isDisabled},{'is-active':value==index}]"
+            :style="{
             width:navWidth,
             color:value==index?activeColor:color
           }"
-          :key="index"
-          @click="navClick(index,item)"
-          v-html="item.title"
-        ></div>
+            :key="index"
+            @click="navClick(index,item)"
+            v-html="item.title"
+          ></li>
+        </ul>
         <div
           v-if="line"
           class="s-tab-line"
@@ -103,7 +104,7 @@ export default {
   },
   data () {
     return {
-      saveScrollLeft: 0,
+      diffLeft: 0,
       scrollLeft: 0,
       lineWidth: 0,
       lineLeft: 0,
@@ -129,8 +130,8 @@ export default {
   },
   watch: {
     value (index) {
-      this.refreshLine();
       this.$emit('change', index);
+      this.refreshNavScroll();
     }
   },
   methods: {
@@ -139,30 +140,32 @@ export default {
         this.$emit('input', index);
       }
     },
-    refreshLine () {
-      if (!this.line) return;
+    refreshNavScroll (isInit) {
       this.$nextTick(() => {
         const query = () => uni.createSelectorQuery().in(this);
-        query().select('.s-tabs-nav-wrap').boundingClientRect().exec(([viewElem]) => {
-          const viewWidth = viewElem.width;
-          query().selectAll('.s-tab-nav').boundingClientRect().exec(([list]) => {
-            const item = list[this.value];
-            if (item) {
-              const itemCenterLeft = (viewWidth - item.width) / 2;
-              this.scrollLeft = this.saveScrollLeft + (item.left - itemCenterLeft);
-              this.lineWidth = item.width * this.lineScale;
-              this.lineLeft = this.scrollLeft + itemCenterLeft + (item.width - this.lineWidth) / 2;
+        query().select('.s-tabs-nav-wrap').boundingClientRect().exec(([wrap]) => {
+          query().select('.s-tab-nav-view').boundingClientRect().exec(([view]) => {
+            if (isInit) {
+              this.diffLeft = view.left - wrap.left;
             }
+            query().selectAll('.s-tab-nav').boundingClientRect().exec(([list]) => {
+              if (list.length) {
+                const item = list[this.value];
+                const centerLeft = (wrap.width - item.width) / 2;
+
+                this.scrollLeft = Math.abs(view.left - wrap.left - this.diffLeft) + (item.left - centerLeft - wrap.left);
+
+                this.lineWidth = item.width * this.lineScale;
+                this.lineLeft = this.scrollLeft + centerLeft + (item.width - this.lineWidth) / 2;
+              }
+            });
           });
         });
       });
-    },
-    onScroll (e) {
-      this.saveScrollLeft = e.detail.scrollLeft;
     }
   },
   mounted () {
-    this.refreshLine();
+    this.refreshNavScroll(true);
   }
 };
 </script>
@@ -172,7 +175,6 @@ export default {
   width: 100%;
   position: relative;
   overflow-x: hidden;
-  font-size: 28rpx;
   &-nav-wrap {
     width: 100%;
     height: 100%;
@@ -191,6 +193,9 @@ export default {
         }
       }
       // #endif
+      .s-tab-nav-view {
+        height: 100%;
+      }
     }
   }
   .s-tab-nav {

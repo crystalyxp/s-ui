@@ -5,7 +5,7 @@ process.env.VUE_APP_ENV = process.env.NODE_ENV;
 // 版本号
 process.env.VUE_APP_VERSION = pkg.version;
 // 编译时间
-process.env.VUE_APP_TIME = new Date().valueOf();
+process.env.VUE_APP_TIME = new Date().toLocaleString();
 
 // vue-cli对打包配置hash，import()等抽离都只认process.env.NODE_ENV = 'production'
 if (process.env.NODE_ENV === 'test') {
