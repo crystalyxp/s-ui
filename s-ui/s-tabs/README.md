@@ -1,5 +1,7 @@
 # 提示
-后续将不在插件市场更新，组件包和示例请访问github中[s-ui地址](https://github.com/sldt/s-ui)下载
+
+[s-ui github地址](https://github.com/sldt/s-ui)
+[s-ui 查看演示](https://sldt.github.io/s-ui/unpackage/dist/build/h5/)
 
 # s-tabs
 
