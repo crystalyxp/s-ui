@@ -1,7 +1,5 @@
-# 提示
-
-[s-ui github地址](https://github.com/sldt/s-ui)
-[s-ui 查看演示](https://sldt.github.io/s-ui/unpackage/dist/build/h5/)
+## [s-ui github地址](https://github.com/sldt/s-ui)
+## [s-ui 查看演示](https://sldt.github.io/s-ui/unpackage/dist/build/h5/)
 
 # s-popup
 
