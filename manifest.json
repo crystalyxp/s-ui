@@ -77,7 +77,7 @@
     "h5" : {
         "router" : {
             "mode" : "hash",
-            "base" : "/unpackage/dist/build/h5"
+            "base" : "/s-ui/unpackage/dist/build/h5"
         },
         "domain" : "https://sldt.github.io"
     }
