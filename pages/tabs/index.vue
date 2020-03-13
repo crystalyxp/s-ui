@@ -9,6 +9,11 @@
       <s-tab title="Tab6">6</s-tab>
       <s-tab title="Tab7">7</s-tab>
     </s-tabs>
+
+    <s-tabs class="custom-tabs" v-model="customActiveTab">
+      <s-tab title="Tab1">1</s-tab>
+      <s-tab title="Tab2">2</s-tab>
+    </s-tabs>
   </section>
 </template>
 
@@ -23,7 +28,8 @@ export default {
   },
   data () {
     return {
-      activeTab: 0
+      activeTab: 0,
+      customActiveTab: 0
     };
   },
   methods: {
@@ -41,6 +47,17 @@ export default {
   /deep/.s-tabs {
     .s-tab-panel {
       padding: 40rpx;
+    }
+  }
+  .custom-tabs {
+    /deep/.s-tab-nav-view {
+      display: flex;
+      justify-content: center;
+      .s-tab-nav {
+        &:not(:first-child) {
+          margin-left: 40rpx;
+        }
+      }
     }
   }
 }

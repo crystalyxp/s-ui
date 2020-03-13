@@ -2,35 +2,37 @@
   <div class="s-tabs" :class="customClass">
     <div class="s-tabs-nav-wrap" :style="'height:'+height+'rpx'">
       <scroll-view
-        class="scroll-view"
+        class="scroll-wrap"
         :show-scrollbar="false"
         scroll-with-animation
         scroll-x
         :scroll-left="scrollLeft"
       >
-        <ul class="s-tab-nav-view">
-          <li
-            v-for="(item,index) of navList"
-            :class="['s-tab-nav',{'is-disabled':item.isDisabled},{'is-active':value==index}]"
-            :style="{
+        <div class="scroll-view">
+          <ul class="s-tab-nav-view">
+            <li
+              v-for="(item,index) of navList"
+              :class="['s-tab-nav',{'is-disabled':item.isDisabled},{'is-active':value==index}]"
+              :style="{
             width:navWidth,
             color:value==index?activeColor:color
           }"
-            :key="index"
-            @click="navClick(index,item)"
-            v-html="item.title"
-          ></li>
-        </ul>
-        <div
-          v-if="line"
-          class="s-tab-line"
-          :style="{
+              :key="index"
+              @click="navClick(index,item)"
+              v-html="item.title"
+            ></li>
+          </ul>
+          <div
+            v-if="line"
+            class="s-tab-line"
+            :style="{
             width:lineWidth+'px',
             height:lineHeight+'rpx',
             background:lineColor,
             transform:'translateX('+lineLeft+'px)'
           }"
-        ></div>
+          ></div>
+        </div>
       </scroll-view>
     </div>
     <div class="s-tabs-content-wrap" :style="transform + transition">
@@ -180,9 +182,8 @@ export default {
     height: 100%;
     display: flex;
     white-space: nowrap;
-    .scroll-view {
+    .scroll-wrap {
       height: 100%;
-      position: relative;
       ::-webkit-scrollbar {
         display: none;
       }
@@ -193,9 +194,13 @@ export default {
         }
       }
       // #endif
-      .s-tab-nav-view {
-        height: 100%;
-      }
+    }
+    .scroll-view {
+      height: 100%;
+      position: relative;
+    }
+    .s-tab-nav-view {
+      height: 100%;
     }
   }
   .s-tab-nav {
