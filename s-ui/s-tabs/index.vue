@@ -9,33 +9,32 @@
         :scroll-left="scrollLeft"
       >
         <div class="scroll-view">
-          <ul class="s-tab-nav-view">
-            <li
-              v-for="(item,index) of navList"
-              :class="['s-tab-nav',{'is-disabled':item.isDisabled},{'is-active':value==index}]"
-              :style="{
-            width:navWidth,
-            color:value==index?activeColor:color
-          }"
-              :key="index"
-              @click="navClick(index,item)"
-              v-html="item.title"
-            ></li>
-          </ul>
+          <div class="s-tab-nav-view">
+            <template v-if="!slotTitle">
+              <div
+                v-for="(item,index) of navInfoList"
+                :class="['s-tab-nav',{'is-disabled':item.disabled},{'is-active':active==index}]"
+                :style="navWidth+'color:'+(active==index?activeColor:color)"
+                :key="index"
+                @click="navClick(index,item)"
+              >{{item.title}}</div>
+            </template>
+            <slot v-else></slot>
+          </div>
           <div
             v-if="line"
             class="s-tab-line"
             :style="{
-            width:lineWidth+'px',
-            height:lineHeight+'rpx',
-            background:lineColor,
-            transform:'translateX('+lineLeft+'px)'
-          }"
+              width:lineWidth+'px',
+              height:lineHeight+'rpx',
+              background:lineColor,
+              transform:'translateX('+lineLeft+'px)'
+            }"
           ></div>
         </div>
       </scroll-view>
     </div>
-    <div class="s-tabs-content-wrap" :style="transform + transition">
+    <div v-if="!slotTitle" class="s-tabs-content-wrap" :style="transform + transition">
       <slot></slot>
     </div>
   </div>
@@ -55,20 +54,27 @@ export default {
       type: Number,
       default: 0
     },
+    // 使子组件s-tab的slot成为导航的填充内容
+    slotTitle: {
+      type: Boolean,
+      default: false
+    },
+    // 导航颜色
     color: {
       type: String,
       default: '#333'
     },
+    // 导航选中颜色
     activeColor: {
       type: String,
       default: '#406BDC'
     },
-    // 标签栏高度 rpx
+    // 导航高度 rpx
     height: {
       type: Number,
       default: 80
     },
-    // 自适应宽度还是百分比等分
+    // 导航自适应宽度还是百分比等分
     navPerView: {
       type: [Number, String],
       default: 'auto'
@@ -82,6 +88,11 @@ export default {
     duration: {
       type: Number,
       default: 0.3
+    },
+    // 内容部分是否开启延迟渲染（首次切换到标签时才触发内容渲染）
+    lazyRender: {
+      type: Boolean,
+      default: true
     },
     // 是否显示底部条
     line: {
@@ -105,21 +116,23 @@ export default {
     }
   },
   data () {
+    this.navContextList = [];
     return {
+      active: 0,
       diffLeft: 0,
       scrollLeft: 0,
       lineWidth: 0,
       lineLeft: 0,
-      navList: []
+      navInfoList: []
     };
   },
   computed: {
     navWidth () {
       const perView = parseInt(this.navPerView);
-      return isNaN(perView) ? 'auto' : 100 / perView + '%';
+      return isNaN(perView) ? '' : ('width:' + 100 / perView + '%;');
     },
     transform () {
-      return `transform: translate3d(${-100 * this.value}%, 0, 0);`;
+      return `transform: translate3d(${-100 * this.active}%, 0, 0);`;
     },
     transition () {
       return this.effect ? `transition-duration: ${this.duration}s;` : '';
@@ -132,15 +145,29 @@ export default {
   },
   watch: {
     value (index) {
-      this.$emit('change', index);
+      this.active = this.value;
+      this.renderContent();
       this.refreshNavScroll();
     }
   },
   methods: {
     navClick (index, item) {
-      if (index !== this.value && !item.isDisabled) {
+      if (index != this.active && !item.disabled) {
+        this.active = index;
         this.$emit('input', index);
+        this.$emit('change', index);
+        this.renderContent();
+        this.refreshNavScroll();
       }
+    },
+    renderContent () {
+      this.$nextTick(() => {
+        const item = this.navContextList[this.active];
+        if (item && !item.info.isRender) {
+          item.info.isRender = true;
+          this.$emit('render', this.active);
+        }
+      });
     },
     refreshNavScroll (isInit) {
       this.$nextTick(() => {
@@ -150,9 +177,8 @@ export default {
             if (isInit) {
               this.diffLeft = view.left - wrap.left;
             }
-            query().selectAll('.s-tab-nav').boundingClientRect().exec(([list]) => {
-              if (list.length) {
-                const item = list[this.value];
+            const setNavScroll = (item) => {
+              if (item) {
                 const centerLeft = (wrap.width - item.width) / 2;
 
                 this.scrollLeft = Math.abs(view.left - wrap.left - this.diffLeft) + (item.left - centerLeft - wrap.left);
@@ -160,13 +186,26 @@ export default {
                 this.lineWidth = item.width * this.lineScale;
                 this.lineLeft = this.scrollLeft + centerLeft + (item.width - this.lineWidth) / 2;
               }
-            });
+            };
+            if (this.slotTitle) {
+              uni.createSelectorQuery().in(this.navContextList[this.active]).select('.s-tab-nav').boundingClientRect().exec(([item]) => {
+                setNavScroll(item);
+              });
+            } else {
+              query().selectAll('.s-tab-nav').boundingClientRect().exec(([list]) => {
+                setNavScroll(list[this.active]);
+              });
+            }
           });
         });
       });
     }
   },
+  created () {
+    this.active = this.value;
+  },
   mounted () {
+    this.renderContent();
     this.refreshNavScroll(true);
   }
 };

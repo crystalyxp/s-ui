@@ -7,13 +7,22 @@
       <div class="btn btn-plain-primary btn-radius" @click="showTopVisible = true">上</div>
       <div class="btn btn-plain-primary btn-radius" @click="showBottomVisible = true">下</div>
 
+      <div class="btn btn-primary btn-radius" @click="showAutoCloseVisible = true">2秒后自动关闭</div>
       <div class="btn btn-primary btn-radius" @click="showBeforeHideVisible = true">关闭拦截</div>
     </div>
+
     <s-popup custom-class="center-popup" position="center" v-model="showCenterVisible"></s-popup>
     <s-popup custom-class="left-popup" position="left" v-model="showLeftVisible"></s-popup>
     <s-popup custom-class="right-popup" position="right" v-model="showRightVisible"></s-popup>
     <s-popup custom-class="top-popup" position="top" v-model="showTopVisible"></s-popup>
     <s-popup custom-class="bottom-popup" position="bottom" v-model="showBottomVisible"></s-popup>
+
+    <s-popup
+      custom-class="center-popup"
+      position="center"
+      :duration="2000"
+      v-model="showAutoCloseVisible"
+    ></s-popup>
 
     <s-popup
       custom-class="center-popup"
@@ -38,7 +47,8 @@ export default {
       showRightVisible: false,
       showTopVisible: false,
       showBottomVisible: false,
-      showBeforeHideVisible: false
+      showBeforeHideVisible: false,
+      showAutoCloseVisible: false
     };
   },
   methods: {
