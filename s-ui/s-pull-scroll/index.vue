@@ -710,15 +710,15 @@ export default {
   mounted () {
     // 设置容器的高度
     this.refreshClientHeight = this.refreshClientHeight.bind(this);
-    uni.onWindowResize(this.refreshClientHeight);
+    uni.onWindowResize && uni.onWindowResize(this.refreshClientHeight);
     this.refreshClientHeight();
-
+    // h5 阻止touchmove默认滚动
     this.$el && this.$el.addEventListener && this.$el.addEventListener('touchmove', e => {
       this.preventTouchmove && e.preventDefault();
     });
   },
   beforeDestroy () {
-    uni.offWindowResize(this.refreshClientHeight);
+    uni.offWindowResize && uni.offWindowResize(this.refreshClientHeight);
   }
 };
 </script>
